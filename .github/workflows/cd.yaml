@@ -181,9 +181,10 @@ jobs:
         else
           echo "Not a PR event, skipping PR details extraction."
         fi
-      
+
+     
     - name: send approval
-      uses: Precise-Finance/slack-approval@v2.11
+      uses: Precise-Finance/slack-approval@v2.14
       env:
         SLACK_APP_TOKEN:  ${{ secrets.SLACK_APP_TOKEN }}
         SLACK_WORKSPACE: precisefinance
@@ -231,7 +232,7 @@ jobs:
         fi
       
     - name: send approval
-      uses: Precise-Finance/slack-approval@v2.11
+      uses: Precise-Finance/slack-approval@v2.14
       env:
         SLACK_APP_TOKEN:  ${{ secrets.SLACK_APP_TOKEN }}
         SLACK_WORKSPACE: precisefinance

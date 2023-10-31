@@ -1,0 +1,75 @@
+name: Continue Deployment after Approval
+
+on:
+  repository_dispatch:
+    types: [deployment-approved]
+
+jobs:
+  post_approval:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy to environment
+      run: |
+        echo "Deploying to ${{ github.event.client_payload.env }}"
+    
+    - name: Tag commit
+      run: |
+        echo "Tagging commit ${{ github.event.client_payload.sha }}"
+    
+    - name: Deploy commit
+      run: |
+        echo "Deploying commit ${{ github.event.client_payload.triggersha }}"
+
+    - name: Checkout Helm repo at specific SHA
+      uses: actions/checkout@v4
+      with:
+        repository: Precise-Finance/charts
+        path: helm-repo
+        ref: ${{ github.event.client_payload.sha }}
+        token: ${{ secrets.GH_SECRET }}
+
+
+    - name: Tag with SHA and ENV
+      run: |
+        cd helm-repo
+        git tag ${{ github.event.client_payload.env }}-${{ github.event.repository.name }}
+        git push origin refs/tags/${{ github.event.client_payload.env }}-${{ github.event.repository.name }} -f --tags
+    
+    - name: start deployment
+      uses: bobheadxi/deployments@v1
+      id: deployment
+      with:
+        step: start
+        token: ${{ secrets.GH_SECRET }}
+        env: ${{ github.event.client_payload.env }}
+        ref: ${{ github.event.client_payload.triggersha }}
+
+    # One day sync with argo
+    # - name: Install ArgoCD CLI
+    #   run: |
+    #     curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+    #     chmod +x /usr/local/bin/argocd
+
+    # - name: Log in to ArgoCD
+    #   run: |
+    #     argocd login ${{ secrets.ARGOCD_SERVER }} --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --insecure
+
+    # - name: Wait for ArgoCD Deployment
+    #   run: |
+    #     while [[ $(argocd app get $APP_NAME --output json | jq -r '.status.sync.status') != "Synced" ]] || [[ $(argocd app get $APP_NAME --output json | jq -r '.status.health.status') != "Healthy" ]]; do
+    #       echo "Waiting for application to be synced and healthy..."
+    #       sleep 30
+    #     done
+    #   env:
+    #     APP_NAME: name-of-your-argocd-app
+
+    - name: update deployment status
+      uses: bobheadxi/deployments@v1
+      if: always()
+      with:
+        step: finish
+        token: ${{ secrets.GH_SECRET }}
+        status: success
+        env: ${{ github.event.client_payload.env }}
+        deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+        
