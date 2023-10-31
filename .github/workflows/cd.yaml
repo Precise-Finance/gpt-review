@@ -184,7 +184,7 @@ jobs:
 
      
     - name: send approval
-      uses: Precise-Finance/slack-approval@v2.14
+      uses: Precise-Finance/slack-approval@v2.15
       env:
         SLACK_APP_TOKEN:  ${{ secrets.SLACK_APP_TOKEN }}
         SLACK_WORKSPACE: precisefinance
@@ -232,7 +232,7 @@ jobs:
         fi
       
     - name: send approval
-      uses: Precise-Finance/slack-approval@v2.14
+      uses: Precise-Finance/slack-approval@v2.15
       env:
         SLACK_APP_TOKEN:  ${{ secrets.SLACK_APP_TOKEN }}
         SLACK_WORKSPACE: precisefinance
@@ -240,6 +240,7 @@ jobs:
         SLACK_SIGNING_SECRET: ${{ secrets.SLACK_SIGNING_SECRET }}
         SLACK_CHANNEL_ID: deployment-approvals #${{ secrets.SLACK_CHANNEL_ID }}
         DEPLOYMENT_ENV: Production
+        CONFIRMATION: true
         COMMIT_SHA: ${{ steps.get_commit_id.outputs.commit_id }}
         GH_SECRET: ${{ secrets.GH_SECRET }}
         PR_LINK: ${{ steps.get_pr_details.outputs.pr_link }}
