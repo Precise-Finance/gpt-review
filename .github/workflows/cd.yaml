@@ -120,9 +120,12 @@ jobs:
     - name: Commit and Push Changes
       if: steps.check_tag.outputs.skip == 'false'
       run: |
+        COMMIT_MSG=$(git log -1 --pretty=format:'%s')
         cd helm-repo
+        BRANCH_NAME=${GITHUB_REF##refs/heads/}
         git add .
-        git commit -m "Update image tag after commit"
+        git commit -m "Updated from $BRANCH_NAME: $COMMIT_MSG"
+        git push
 
     - name: Push Changes with Retries
       run: |
