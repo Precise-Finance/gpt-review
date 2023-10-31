@@ -125,7 +125,6 @@ jobs:
         BRANCH_NAME=${GITHUB_REF##refs/heads/}
         git add .
         git commit -m "Updated from $BRANCH_NAME: $COMMIT_MSG"
-        git push
 
     - name: Push Changes with Retries
       run: |
