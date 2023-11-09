@@ -81,10 +81,10 @@ jobs:
       uses: actions/cache@v3.3.2
       with:
         path: /tmp/.buildx-cache
-        key: ${{ runner.os }}-buildx-${{ hashFiles('**/Dockerfile', '**/package-lock.json') }}
-        restore-keys: |
-            ${{ runner.os }}-buildx-${{ hashFiles('**/package-lock.json') }}
-            ${{ runner.os }}-buildx-
+        key: ${{ runner.os }}-buildx-${{ hashFiles('./Dockerfile', './package-lock.json') }}
+        # restore-keys: |
+        #     ${{ runner.os }}-buildx-${{ hashFiles('**/package-lock.json') }}
+        #     ${{ runner.os }}-buildx-
 
 
     - name: Build, tag, and push docker image to Amazon ECR using Buildx
