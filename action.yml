@@ -38,8 +38,8 @@ runs:
         run: |
           sudo apt-get update
           git clone https://github.com/Precise-Finance/gpt-review.git
-          python3 -m venv .env
-          source .env/bin/activate
+          python3 -m venv .pyenv
+          source .pyenv/bin/activate
           python -m pip install --upgrade pip
           # python -m pip install langchain==0.0.301
           # python -m pip install pydantic==1.10.13
