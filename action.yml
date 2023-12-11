@@ -37,13 +37,16 @@ runs:
         shell: bash
         run: |
           sudo apt-get update
-          python3 -m venv .pyenv
-          source .pyenv/bin/activate
+          git clone https://github.com/Precise-Finance/gpt-review.git
+          python3 -m venv .env
+          source .env/bin/activate
           python -m pip install --upgrade pip
-          python -m pip install langchain==0.0.301
-          python -m pip install pydantic==1.10.13
-          python -m pip install openai==1.1.2
-          python -m pip install gpt-review==v0.9.5
+          # python -m pip install langchain==0.0.301
+          # python -m pip install pydantic==1.10.13
+          # python -m pip install openai==0.28.1
+          python -m pip install -r ./gpt-review/requirements.txt
+          python -m pip install ./gpt-review/ --no-deps
+          # python -m pip install --no-deps openai==0.28.1
 
       - name: Review PR and make comment
         shell: bash
